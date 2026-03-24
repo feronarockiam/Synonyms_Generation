@@ -180,6 +180,7 @@ const getSynonymCounts = async () => {
 };
 
 module.exports = { 
+    connectDB,
     Cluster, 
     Metric, 
     Job,

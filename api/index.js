@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
     dotenv.config({ path: path.join(__dirname, '..', '.env') });
 }
 
-const { Cluster, Metric, Job, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
+const { connectDB, Cluster, Metric, Job, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
 
 const app = express();
 app.use(cors());
@@ -21,6 +21,17 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// GLOBAL DB MIDDLEWARE: Ensure connection is ready before routing
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error('Middleware DB Error:', err);
+        res.status(500).json({ error: 'Database connection failed: ' + err.message });
+    }
+});
 
 const PORT = process.env.MANAGER_PORT || 4001;
 
