@@ -55,35 +55,378 @@ try {
     console.warn('Gemini init failed:', e.message);
 }
 
-// Load prompts with robust error handling
-const promptsDir = path.join(__dirname, '..', 'prompts');
-let synonymsPrompt = '';
-let regionalPrompt = '';
+// ─────────────────────────────────────────────────────────
+// HARDCODED PROMPTS (Vercel Stability Fix)
+// ─────────────────────────────────────────────────────────
+const synonymsPrompt = `You generate **product synonym clusters for an ecommerce search engine**.
 
-try {
-    const synPath = path.join(promptsDir, 'synonyms.txt');
-    const regPath = path.join(promptsDir, 'regional_variation.txt');
+Domain: **baby, kids, and family shopping products in India**.
 
-    if (!fs.existsSync(synPath)) {
-        console.error(`CRITICAL: Prompt file missing at ${synPath}`);
-        console.error('Available files in root:', fs.readdirSync(__dirname).join(', '));
-        if (fs.existsSync(promptsDir)) {
-            console.error('Available files in prompts/:', fs.readdirSync(promptsDir).join(', '));
-        }
-    }
+The goal is to identify **different names users use for the SAME product when searching**.
 
-    synonymsPrompt = fs.readFileSync(synPath, 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
-    regionalPrompt = fs.readFileSync(regPath, 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
-} catch (e) {
-    console.error('Failed to load prompts:', e.message);
-    // In production, we don't want to crash the whole server, but we must log it loudly.
-    if (process.env.NODE_ENV === 'production') {
-        synonymsPrompt = "Fallback: Return JSON only.";
-        regionalPrompt = "Fallback: Return JSON only.";
-    } else {
-        throw e;
-    }
+These synonyms will be used to **normalize search queries** so that different terms retrieve the same products.
+
+Return **ONLY valid JSON**.
+
+---
+
+# TASK
+
+Given a **product type**, generate **alternate names that refer to the exact same product**.
+
+A synonym must satisfy ALL of the following:
+
+• refers to the **same physical product**
+• represents the **same purchase intent**
+• belongs to the **same product category**
+
+All synonyms must be **interchangeable in search results**.
+
+---
+
+# SYNONYM VALIDATION RULE
+
+A term is a valid synonym only if the following test passes:
+
+"If a user searches this term, they expect to see the same products."
+
+Example:
+
+Concept: feeding bottle
+
+Valid synonyms:
+
+feeding bottle
+baby bottle
+milk bottle
+
+Invalid:
+
+bottle nipple (accessory)
+bottle sterilizer (different product)
+
+---
+
+# STRICT RULES
+
+## 1. Same product only
+
+Do NOT generate:
+
+• accessories
+• spare parts
+• bundles
+• related items
+
+Example:
+
+Concept: stroller
+
+Valid:
+stroller
+baby stroller
+baby pram
+
+Invalid:
+stroller rain cover
+stroller organizer bag
+
+---
+
+## 2. Avoid generic parent categories
+
+Do NOT generate overly generic terms.
+
+Invalid examples:
+
+toy
+container
+carrier
+vehicle
+
+These are broader categories and will produce incorrect search results.
+
+---
+
+## 3. Allow natural product phrases
+
+Short product phrases are allowed if they still refer to the same item.
+
+Valid examples:
+
+tiffin carrier -> lunch box
+milk bottle -> feeding bottle
+water pistol -> water gun
+
+---
+
+## 4. Use realistic shopping language
+
+Synonyms should look like **real ecommerce search queries**.
+
+Avoid descriptive phrases.
+
+Bad:
+
+plastic feeding bottle for newborn baby
+
+Good:
+
+feeding bottle
+baby bottle
+
+---
+
+## 5. Term length rules
+
+Each synonym must be:
+
+• 1–3 words
+• concise product naming
+
+---
+
+## 6. Avoid descriptive search queries
+
+Do NOT generate phrases like:
+
+toy car for kids
+feeding bottle for baby
+
+These are **search queries**, not product synonyms.
+
+---
+
+# OUTPUT LIMIT
+
+Return **3–6 synonyms maximum**.
+
+Prioritize **high-confidence common names**.
+
+---
+
+# OUTPUT FORMAT
+
+{
+"product_type": "input product type",
+"synonyms": [
+"synonym 1",
+"synonym 2",
+"synonym 3"
+]
+}`;
+
+const regionalPrompt = `You generate **Indian regional product name variations for an ecommerce search engine**.
+
+Domain: **baby, kids, and family shopping products in India**.
+
+The goal is to identify **informal names or colloquial product terms people in India might type when searching for this product**.
+
+These variations help map **different cultural or regional names to the same product**.
+
+Return **ONLY JSON**.
+
+---
+
+# TASK
+
+Given a product type, generate **informal product names commonly used in Indian shopping language**.
+
+These may include:
+
+• Hinglish terms
+• colloquial retail names
+• common Indian English variations
+• occasionally other Indian regional language terms if they are widely used in retail search
+
+All terms must be written using **Roman alphabet (English letters)**.
+
+---
+
+# LANGUAGE GUIDELINES
+
+Focus primarily on:
+
+• English
+• Hinglish (Hindi words written in English letters)
+
+Examples:
+
+feeding bottle -> doodh bottle
+vest -> baniyan
+lunch box -> dabba
+
+You may include **other Indian regional language terms** only if they are **commonly used in shopping search**.
+
+Example:
+
+swing -> jhula
+cap -> topi
+footwear -> chappal
+
+Do NOT generate rare translations.
+
+---
+
+# IMPORTANT RULE
+
+A variation is valid only if:
+
+"If a user searches this word, they expect to see this product."
+
+Example:
+
+Concept: lunch box
+
+Valid:
+
+tiffin
+tiffin box
+dabba
+
+---
+
+# STRICT RULES
+
+1. Do NOT translate the product literally.
+
+Invalid:
+
+food container
+milk drinking bottle
+cloth used for burping
+
+These are **descriptions**, not product names.
+
+---
+
+2. Avoid long phrases.
+
+Each variation must be:
+
+• 1–3 words
+• short and natural
+
+---
+
+3. Avoid descriptive search queries.
+
+Invalid:
+
+feeding bottle for baby
+toy car for kids
+
+---
+
+4. Avoid unrelated products.
+
+Example:
+
+Concept: pacifier
+
+Invalid:
+
+teether
+
+---
+
+5. If no commonly used regional variations exist, return an empty list.
+
+Do NOT invent words.
+
+---
+
+# OUTPUT LIMIT
+
+Return **2–5 regional variations maximum**.
+
+---
+
+# OUTPUT FORMAT
+
+{
+"product_type": "input product type",
+"regional_variations": [
+"variation 1",
+"variation 2",
+"variation 3"
+]
 }
+
+---
+
+# EXAMPLES
+
+Example 1
+
+Input:
+
+lunch box
+
+Output:
+
+{
+"product_type": "lunch box",
+"regional_variations": [
+"tiffin",
+"tiffin box",
+"dabba"
+]
+}
+
+---
+
+Example 2
+
+Input:
+
+vest
+
+Output:
+
+{
+"product_type": "vest",
+"regional_variations": [
+"baniyan",
+"banian"
+]
+}
+
+---
+
+Example 3
+
+Input:
+
+water gun
+
+Output:
+
+{
+"product_type": "water gun",
+"regional_variations": [
+"pichkari",
+"holi pichkari"
+]
+}
+
+---
+
+Example 4
+
+Input:
+
+feeding bottle
+
+Output:
+
+{
+"product_type": "feeding bottle",
+"regional_variations": [
+"doodh bottle",
+"paal bottle
+]
+}`;
 
 // ─────────────────────────────────────────────────────────
 // STATE & JOBS
