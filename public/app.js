@@ -607,8 +607,8 @@ document.addEventListener('DOMContentLoaded', () => {
             draftsData.forEach(row => {
                 appendCard({
                     product_type: row.product_type,
-                    synonyms: JSON.parse(row.synonyms),
-                    regional_variations: JSON.parse(row.regional_variations),
+                    synonyms: Array.isArray(row.synonyms) ? row.synonyms : (typeof row.synonyms === 'string' ? JSON.parse(row.synonyms) : []),
+                    regional_variations: Array.isArray(row.regional_variations) ? row.regional_variations : (typeof row.regional_variations === 'string' ? JSON.parse(row.regional_variations) : []),
                     source: row.source
                 }, draftsCards, false);
             });
@@ -645,8 +645,10 @@ document.addEventListener('DOMContentLoaded', () => {
     historySearch.addEventListener('input', () => {
         const q = historySearch.value.toLowerCase();
         renderHistory(historyData.filter(r => {
-            const s = JSON.parse(r.synonyms).join(' ').toLowerCase();
-            const v = JSON.parse(r.regional_variations).join(' ').toLowerCase();
+            const arrSyn = Array.isArray(r.synonyms) ? r.synonyms : (typeof r.synonyms === 'string' ? JSON.parse(r.synonyms) : []);
+            const arrReg = Array.isArray(r.regional_variations) ? r.regional_variations : (typeof r.regional_variations === 'string' ? JSON.parse(r.regional_variations) : []);
+            const s = arrSyn.join(' ').toLowerCase();
+            const v = arrReg.join(' ').toLowerCase();
             return r.product_type.toLowerCase().includes(q) || s.includes(q) || v.includes(q);
         }));
     });
