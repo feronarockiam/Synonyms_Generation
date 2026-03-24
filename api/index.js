@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
     dotenv.config({ path: path.join(__dirname, '..', '.env') });
 }
 
-const { Cluster, Metric, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
+const { Cluster, Metric, Job, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
 
 const app = express();
 app.use(cors());
@@ -429,9 +429,8 @@ Output:
 }`;
 
 // ─────────────────────────────────────────────────────────
-// STATE & JOBS
+// STATE & JOBS (Stateless via MongoDB)
 // ─────────────────────────────────────────────────────────
-const pendingJobs = new Map();
 
 // ─────────────────────────────────────────────────────────
 // SHARED UTILS
@@ -629,52 +628,39 @@ app.post('/api/approve', async (req, res) => {
     }
 });
 
-// Create Job for Custom or Index
-app.post('/api/jobs', (req, res) => {
-    const { type, terms, model } = req.body;
-    const jobId = Date.now().toString() + Math.random().toString().substring(2, 6);
-    
-    // Fire and forget, job is stored
-    pendingJobs.set(jobId, { 
-        type, 
-        terms: terms || [], 
-        mode: type === 'index' ? 'catalog' : 'custom',
-        model: model || 'claude' 
-    });
-    res.json({ jobId });
-});
-
 // SSE Streaming Execution
 app.get('/api/jobs/:id/stream', async (req, res) => {
     const jobId = req.params.id;
-    const job = pendingJobs.get(jobId);
     
-    if (!job) return res.status(404).send('Job not found');
-    pendingJobs.delete(jobId);
-
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-
-    let isAborted = false;
-    req.on('close', () => { isAborted = true; });
-
-    const send = (type, data) => {
-        if (!isAborted) res.write(`data: ${JSON.stringify({ type, ...data })}\n\n`);
-    };
-
     try {
+        const job = await Job.findOne({ job_id: jobId });
+        if (!job) return res.status(404).send('Job not found in DB');
+        
+        // Delete job to prevent re-execution or duplicate streaming
+        await Job.deleteOne({ job_id: jobId });
+
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.flushHeaders();
+
+        let isAborted = false;
+        req.on('close', () => { isAborted = true; });
+
+        const send = (type, data) => {
+            if (!isAborted) res.write(`data: ${JSON.stringify({ type, ...data })}\n\n`);
+        };
+
         let rawTerms = [];
 
         // 1. Gather all terms
         if (job.type === 'index') {
             send('status', { message: 'Loading p_types from unique_ptypes.txt...' });
-            const filePath = path.join(__dirname, '../unique_ptypes.txt');
+            const filePath = path.join(__dirname, '..', 'data', 'unique_ptypes.txt');
             if (fs.existsSync(filePath)) {
                 rawTerms = fs.readFileSync(filePath, 'utf8').split('\n');
             } else {
-                throw new Error('unique_ptypes.txt not found');
+                throw new Error('unique_ptypes.txt not found in bundled data folder');
             }
         } else {
             rawTerms = job.terms;
@@ -725,10 +711,7 @@ app.get('/api/jobs/:id/stream', async (req, res) => {
         const BATCH_SIZE = 6;
 
         for (let i = 0; i < pendingCanonical.length; i += BATCH_SIZE) {
-            if (isAborted) {
-                console.log(`Job ${jobId} aborted by client.`);
-                break;
-            }
+            if (isAborted) break;
 
             const batch = pendingCanonical.slice(i, i + BATCH_SIZE);
             send('status', { message: `Processing concepts: [${batch.join(', ')}]` });
@@ -748,13 +731,10 @@ app.get('/api/jobs/:id/stream', async (req, res) => {
 
                 const results = mergeResults(batch, synResult, regResult, job.mode);
                 
-                // Track variations for each result
                 results.forEach(item => {
                     item.variations = conceptDataMap.get(item.product_type) || [item.product_type];
                 });
 
-                // Auto-save as draft so nothing is lost if user refreshes
-                // We save for ALL variations in the cluster
                 const generatorLlm = job.model === 'gemini' ? 'Gemini' : 'Claude';
                 for (let item of results) {
                     for (let target of item.variations) {
@@ -776,12 +756,10 @@ app.get('/api/jobs/:id/stream', async (req, res) => {
                 }
                 
                 processed += batch.length;
-
                 send('batch_result', { results, tokens: (inputTokens + outputTokens), done: processed, total });
             } catch (batchErr) {
                 console.error(batchErr);
                 send('batch_error', { terms: batch, message: batchErr.message, done: processed, total });
-                // We do NOT abort on batch failure — we skip and continue to the next batch!
                 processed += batch.length; 
             }
         }
@@ -791,7 +769,11 @@ app.get('/api/jobs/:id/stream', async (req, res) => {
         }
     } catch (err) {
         console.error('[SSE]', err.message);
-        send('error', { message: err.message });
+        if (!res.headersSent) {
+            res.status(500).json({ error: err.message });
+        } else {
+            send('error', { message: err.message });
+        }
     } finally {
         res.end();
     }
