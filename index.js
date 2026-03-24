@@ -9,7 +9,9 @@ const { GoogleGenAI } = require('@google/genai');
 const dotenv = require('dotenv');
 const xlsx = require('xlsx');
 
-dotenv.config({ path: path.join(__dirname, '.env') });
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config({ path: path.join(__dirname, '.env') });
+}
 
 const { Cluster, Metric, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
 
@@ -53,10 +55,35 @@ try {
     console.warn('Gemini init failed:', e.message);
 }
 
-// Load prompts
+// Load prompts with robust error handling
 const promptsDir = path.join(__dirname, 'prompts');
-const synonymsPrompt = fs.readFileSync(path.join(promptsDir, 'synonyms.txt'), 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
-const regionalPrompt = fs.readFileSync(path.join(promptsDir, 'regional_variation.txt'), 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
+let synonymsPrompt = '';
+let regionalPrompt = '';
+
+try {
+    const synPath = path.join(promptsDir, 'synonyms.txt');
+    const regPath = path.join(promptsDir, 'regional_variation.txt');
+
+    if (!fs.existsSync(synPath)) {
+        console.error(`CRITICAL: Prompt file missing at ${synPath}`);
+        console.error('Available files in root:', fs.readdirSync(__dirname).join(', '));
+        if (fs.existsSync(promptsDir)) {
+            console.error('Available files in prompts/:', fs.readdirSync(promptsDir).join(', '));
+        }
+    }
+
+    synonymsPrompt = fs.readFileSync(synPath, 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
+    regionalPrompt = fs.readFileSync(regPath, 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
+} catch (e) {
+    console.error('Failed to load prompts:', e.message);
+    // In production, we don't want to crash the whole server, but we must log it loudly.
+    if (process.env.NODE_ENV === 'production') {
+        synonymsPrompt = "Fallback: Return JSON only.";
+        regionalPrompt = "Fallback: Return JSON only.";
+    } else {
+        throw e;
+    }
+}
 
 // ─────────────────────────────────────────────────────────
 // STATE & JOBS

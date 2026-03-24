@@ -2,17 +2,22 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(__dirname, '.env') });
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config({ path: path.join(__dirname, '.env') });
+}
 
 const mongoUri = process.env.MONGODB_URI;
 
 if (!mongoUri) {
-    console.error('MONGODB_URI is not defined in .env');
+    console.error('CRITICAL: MONGODB_URI is not defined in environment variables.');
+} else {
+    mongoose.connect(mongoUri)
+        .then(() => console.log('Connected to MongoDB Atlas'))
+        .catch(err => {
+            console.error('MongoDB connection error details:');
+            console.error(err);
+        });
 }
-
-mongoose.connect(mongoUri)
-    .then(() => console.log('Connected to MongoDB Atlas'))
-    .catch(err => console.error('MongoDB connection error:', err));
 
 // ─────────────────────────────────────────────────────────
 // SCHEMAS
