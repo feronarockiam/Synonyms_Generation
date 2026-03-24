@@ -9,16 +9,47 @@ if (process.env.NODE_ENV !== 'production') {
 
 const mongoUri = process.env.MONGODB_URI;
 
-if (!mongoUri) {
-    console.error('CRITICAL: MONGODB_URI is not defined in environment variables.');
-} else {
-    mongoose.connect(mongoUri)
-        .then(() => console.log('Connected to MongoDB Atlas'))
-        .catch(err => {
-            console.error('MongoDB connection error details:');
-            console.error(err);
-        });
+mongoose.set('bufferCommands', false); // Fail fast if DB isn't connected
+
+let cached = global.mongoose;
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
 }
+
+async function connectDB() {
+    if (!mongoUri) {
+        throw new Error('CRITICAL: MONGODB_URI is not defined in environment variables.');
+    }
+    
+    if (cached.conn) {
+        return cached.conn;
+    }
+
+    if (!cached.promise) {
+        console.log('Connecting to MongoDB Atlas directly...');
+        cached.promise = mongoose.connect(mongoUri, {
+            serverSelectionTimeoutMS: 5000 // Timeout in 5s instead of 30s
+        }).then((mongoose) => {
+            return mongoose;
+        }).catch(err => {
+            console.error('MongoDB connection error:', err);
+            cached.promise = null; // reset if fail
+            throw err;
+        });
+    }
+    
+    try {
+        cached.conn = await cached.promise;
+    } catch (e) {
+        cached.promise = null;
+        throw e;
+    }
+    
+    return cached.conn;
+}
+
+// Call it once so it starts connecting right away securely
+connectDB().catch(console.error);
 
 // ─────────────────────────────────────────────────────────
 // SCHEMAS
