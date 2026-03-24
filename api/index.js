@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 const xlsx = require('xlsx');
 
 if (process.env.NODE_ENV !== 'production') {
-    dotenv.config({ path: path.join(__dirname, '.env') });
+    dotenv.config({ path: path.join(__dirname, '..', '.env') });
 }
 
 const { Cluster, Metric, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
@@ -30,7 +30,7 @@ const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
 // AUTH: Gemini (Vertex AI - Unified SDK)
 let genaiClient;
 try {
-    const credsPath = path.join(__dirname, 'data', 'creds.json');
+    const credsPath = path.join(__dirname, '..', 'data', 'creds.json');
     let credentials;
     if (process.env.GOOGLE_CREDS_JSON) {
         credentials = JSON.parse(process.env.GOOGLE_CREDS_JSON);
@@ -56,7 +56,7 @@ try {
 }
 
 // Load prompts with robust error handling
-const promptsDir = path.join(__dirname, 'prompts');
+const promptsDir = path.join(__dirname, '..', 'prompts');
 let synonymsPrompt = '';
 let regionalPrompt = '';
 
