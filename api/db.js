@@ -59,8 +59,18 @@ const MetricSchema = new mongoose.Schema({
     gemini_cost: { type: Number, default: 0 }
 });
 
+const JobSchema = new mongoose.Schema({
+    job_id: { type: String, unique: true, index: true },
+    type: String,
+    mode: String,
+    model: String,
+    terms: { type: [String], default: [] },
+    created_at: { type: Date, default: Date.now, expires: 3600 } // Auto-delete in 1 hr
+});
+
 const Cluster = mongoose.model('Cluster', ClusterSchema);
 const Metric = mongoose.model('Metric', MetricSchema);
+const Job = mongoose.model('Job', JobSchema);
 
 // ─────────────────────────────────────────────────────────
 // DB HELPERS
@@ -141,6 +151,7 @@ const getSynonymCounts = async () => {
 module.exports = { 
     Cluster, 
     Metric, 
+    Job,
     getMetrics, 
     updateMetrics, 
     getSynonymCounts 
