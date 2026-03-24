@@ -628,6 +628,25 @@ app.post('/api/approve', async (req, res) => {
     }
 });
 
+// Create Job for Custom or Index
+app.post('/api/jobs', async (req, res) => {
+    const { type, terms, model } = req.body;
+    const jobId = Date.now().toString() + Math.random().toString().substring(2, 6);
+    
+    try {
+        await Job.create({
+            job_id: jobId,
+            type,
+            terms: terms || [],
+            mode: type === 'index' ? 'catalog' : 'custom',
+            model: model || 'claude'
+        });
+        res.json({ jobId });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // SSE Streaming Execution
 app.get('/api/jobs/:id/stream', async (req, res) => {
     const jobId = req.params.id;
