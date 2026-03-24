@@ -1,0 +1,25 @@
+# Local Environment
+.env
+.env.local
+node_modules/
+.vercel/
+
+# Legacy Data & Backups
+*.db
+synonyms_backup.json
+*.xlsx
+*.txt
+*.log
+creds.json
+data/creds.json
+
+# Debug and Test
+test_*.js
+test_*.ts
+migrate_to_mongo.js
+backup_sqlite.js
+fix_metrics.js
+
+# OS Files
+.DS_Store
+Thumbs.db

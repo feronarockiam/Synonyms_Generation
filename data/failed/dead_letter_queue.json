@@ -1,0 +1,206 @@
+[
+  {
+    "term": "Baby Vest",
+    "error": "401 {\"error\":{\"message\":\"Invalid API Key\",\"type\":\"invalid_request_error\",\"code\":\"invalid_api_key\"}}",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-19T18:37:58.290Z"
+  },
+  {
+    "term": "Diaper",
+    "error": "401 {\"error\":{\"message\":\"Invalid API Key\",\"type\":\"invalid_request_error\",\"code\":\"invalid_api_key\"}}",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-19T18:37:58.291Z"
+  },
+  {
+    "term": "Pacifier",
+    "error": "401 {\"error\":{\"message\":\"Invalid API Key\",\"type\":\"invalid_request_error\",\"code\":\"invalid_api_key\"}}",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-19T18:37:58.291Z"
+  },
+  {
+    "term": "Baby Bottle",
+    "error": "401 {\"error\":{\"message\":\"Invalid API Key\",\"type\":\"invalid_request_error\",\"code\":\"invalid_api_key\"}}",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-19T18:37:58.292Z"
+  },
+  {
+    "term": "teether",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.526Z"
+  },
+  {
+    "term": "Baby Care",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.528Z"
+  },
+  {
+    "term": "Newborn Essentials",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.529Z"
+  },
+  {
+    "term": "Teethers",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.529Z"
+  },
+  {
+    "term": "tshirt",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.530Z"
+  },
+  {
+    "term": "Fashion",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.531Z"
+  },
+  {
+    "term": "Top Wear",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.531Z"
+  },
+  {
+    "term": "Full Sleeve T-Shirt",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.532Z"
+  },
+  {
+    "term": "halloween costume dress",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.532Z"
+  },
+  {
+    "term": "Toys",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.532Z"
+  },
+  {
+    "term": "Pretend & Role Play Sets",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.533Z"
+  },
+  {
+    "term": "halloween hat",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.533Z"
+  },
+  {
+    "term": "halloween mask",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.534Z"
+  },
+  {
+    "term": "halloween craft kit",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.534Z"
+  },
+  {
+    "term": "Learning Toys",
+    "error": "Unexpected non-whitespace character after JSON at position 1281 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:30:43.535Z"
+  },
+  {
+    "term": "diapers",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.601Z"
+  },
+  {
+    "term": "Diapers, Wipes & Potty Training",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.602Z"
+  },
+  {
+    "term": "Baby Diapers",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.602Z"
+  },
+  {
+    "term": "feeding bottle",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.603Z"
+  },
+  {
+    "term": "Feeding & Nursing",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.603Z"
+  },
+  {
+    "term": "Feeding Bottles",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.603Z"
+  },
+  {
+    "term": "crayons",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.604Z"
+  },
+  {
+    "term": "School",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.604Z"
+  },
+  {
+    "term": "Stationery",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.604Z"
+  },
+  {
+    "term": "Art & Craft",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.605Z"
+  },
+  {
+    "term": "jacket",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.605Z"
+  },
+  {
+    "term": "Winter Wear",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.605Z"
+  },
+  {
+    "term": "Jackets & Hoodies",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.606Z"
+  },
+  {
+    "term": "glow lamp kit",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.606Z"
+  },
+  {
+    "term": "lock & key toy",
+    "error": "Unexpected non-whitespace character after JSON at position 1240 (line 25 column 4)",
+    "attempts": 3,
+    "lastAttemptAt": "2026-03-22T09:31:01.606Z"
+  }
+]

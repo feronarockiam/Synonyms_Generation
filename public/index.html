@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synonym Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- ═══════════════════ LEFT SIDEBAR ═══════════════════ -->
+    <aside class="sidebar expanded" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <svg class="brand-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <span class="brand-text">Synonym Pipeline</span>
+            </div>
+            <button class="icon-btn" id="sidebar-toggle" title="Toggle Sidebar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-view="view-custom">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <span class="nav-label">Custom Generation</span>
+            </button>
+            <button class="nav-item" data-view="view-index">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span class="nav-label">Index Extractor</span>
+            </button>
+            <button class="nav-item" data-view="view-drafts">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span class="nav-label">Saved Drafts</span>
+            </button>
+            <button class="nav-item" data-view="view-history">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <span class="nav-label">Library</span>
+            </button>
+            <button class="nav-item" data-view="view-settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span class="nav-label">Data & Models</span>
+            </button>
+        </nav>
+
+            <div class="sidebar-metrics">
+                <!-- API Stats -->
+                <div class="metric-row">
+                    <span class="metric-label" style="font-size: 0.65rem; border-bottom: 1px solid var(--border); width: 100%; padding-bottom: 4px; margin-bottom: 4px;">CLAUDE USAGE</span>
+                </div>
+                <div class="metric-row sub-metric" style="padding-left: 0;">
+                    <span class="metric-label">Calls</span>
+                    <span class="metric-value" id="val-claude-calls" style="font-size: 0.85rem;">0</span>
+                </div>
+                <div class="metric-row sub-metric" style="padding-left: 0; margin-bottom: 4px;">
+                    <span class="metric-label">Cost</span>
+                    <span class="metric-value" id="val-claude-cost" style="font-size: 0.85rem;">$0.00</span>
+                </div>
+
+                <div class="metric-row" style="margin-top: .5rem;">
+                    <span class="metric-label" style="font-size: 0.65rem; border-bottom: 1px solid var(--border); width: 100%; padding-bottom: 4px; margin-bottom: 4px;">GEMINI USAGE</span>
+                </div>
+                <div class="metric-row sub-metric" style="padding-left: 0;">
+                    <span class="metric-label">Calls</span>
+                    <span class="metric-value" id="val-gemini-calls" style="font-size: 0.85rem;">0</span>
+                </div>
+                <div class="metric-row sub-metric" style="padding-left: 0; margin-bottom: 1rem;">
+                    <span class="metric-label">Cost</span>
+                    <span class="metric-value" id="val-gemini-cost" style="font-size: 0.85rem;">$0.00</span>
+                </div>
+
+                <!-- Grand Total Card -->
+                <div class="sidebar-card">
+                    <div class="card-tag">Grand Total</div>
+                    <div class="card-stat">
+                        <span class="stat-label">Terms</span>
+                        <span class="stat-val" id="val-total-terms">0</span>
+                    </div>
+                    <div class="card-stat">
+                        <span class="stat-label">Synonyms</span>
+                        <span class="stat-val" id="val-total-words">0</span>
+                    </div>
+                </div>
+
+                <!-- Breakdown -->
+                <div class="metric-row" style="border-top: 1px dashed var(--border); padding-top: 1rem; margin-top: .5rem;">
+                    <span class="metric-label">Approved Library</span>
+                </div>
+                <div class="metric-row sub-metric">
+                    <span class="metric-label">• Terms</span>
+                    <span class="metric-value" id="val-approved-terms">0</span>
+                </div>
+                <div class="metric-row sub-metric" style="margin-bottom: .5rem;">
+                    <span class="metric-label">• Synonyms</span>
+                    <span class="metric-value" id="val-approved-words">0</span>
+                </div>
+                
+                <div class="metric-row" style="border-top: 1px dashed var(--border); padding-top: .5rem;">
+                    <span class="metric-label">Drafts (Pending)</span>
+                </div>
+                <div class="metric-row sub-metric">
+                    <span class="metric-label">• Terms</span>
+                    <span class="metric-value" id="val-draft-terms">0</span>
+                </div>
+                <div class="metric-row sub-metric">
+                    <span class="metric-label">• Synonyms</span>
+                    <span class="metric-value" id="val-draft-words">0</span>
+                </div>
+            </div>
+    </aside>
+
+    <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+    <main class="main-content">
+
+        <!-- ─── VIEW: ChatGPT-style Prompt Area (Custom Terms) ─── -->
+        <div id="view-custom" class="view active chat-container">
+            <div class="chat-header">
+                <h2>Generate Synonyms</h2>
+                <p>Paste terms or upload a text file to build highly-relevant cluster schemas.</p>
+            </div>
+
+            <div class="chat-prompt-box">
+                <textarea id="custom-terms" placeholder="Enter product types, one per line..."></textarea>
+                
+                <div class="prompt-toolbar">
+                    <div class="file-upload-wrapper" title="Attach .TXT file">
+                        <button class="icon-btn-attach">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                        </button>
+                        <input type="file" id="file-upload" accept=".txt">
+                    </div>
+                    <div class="file-badger" id="file-badge"></div>
+                    <div style="flex:1"></div>
+                    <button class="btn btn-primary generate-btn" id="btn-generate-custom">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Generate Synonyms
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── VIEW: Index Extractor ─── -->
+        <div id="view-index" class="view chat-container">
+            <div class="chat-header">
+                <h2>Production Index Initialization</h2>
+                <p>Extract unique `p_types` from your Algolia index, automatically normalize and deduplicate them, and process them all in sequential batches.</p>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" style="opacity:0.2; margin-bottom:1.5rem;"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                <br>
+                <button class="btn btn-primary btn-large" id="btn-generate-index" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Start Production Extraction
+                </button>
+            </div>
+        </div>
+
+        <!-- ─── VIEW: LIVE PIPELINE STREAM ─── -->
+        <div id="view-pipeline" class="view">
+            <div class="pipeline-header-bar">
+                <button class="btn btn-secondary icon-only" id="btn-pipeline-back" title="Back">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                </button>
+                <div style="flex:1;">
+                    <h2 style="font-size: 1.35rem;">Live AI Pipeline</h2>
+                    <p class="view-sub" id="pipeline-status-text" style="margin-top:0.25rem;">Initializing stream...</p>
+                </div>
+                <!-- STOP BUTTON -->
+                <button class="btn btn-danger" id="btn-pipeline-stop">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                    Stop Processing
+                </button>
+            </div>
+
+            <div class="pipeline-progress-panel">
+                <div style="display:flex; justify-content:space-between; margin-bottom:.5rem;">
+                    <span style="font-weight:600; font-size:.9rem; color:var(--primary);" id="pipeline-percent">0%</span>
+                    <span id="pipeline-count" class="badge">0 / 0</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+            </div>
+
+            <div class="review-section">
+                <h3>Batch Results</h3>
+                <div class="cards-grid" id="pipeline-cards"></div>
+            </div>
+        </div>
+
+        <!-- ─── VIEW: Drafts ─── -->
+        <div id="view-drafts" class="view">
+            <div class="view-header">
+                <div>
+                    <h2>Saved Drafts</h2>
+                    <p class="view-sub"><strong id="count-draft-terms">0</strong> terms waiting with <strong id="count-draft-words-header">0</strong> synonyms generated.</p>
+                </div>
+            </div>
+            <div class="review-section">
+                <div class="cards-grid" id="drafts-cards"></div>
+                <p id="drafts-empty" class="empty-msg" style="display:none;">No pending drafts.</p>
+            </div>
+        </div>
+
+        <!-- ─── VIEW: History ─── -->
+        <div id="view-history" class="view">
+            <div class="view-header">
+                <div>
+                    <h2>History & Export</h2>
+                    <p class="view-sub">Manage <strong id="count-approved-terms">0</strong> terms with <strong id="count-approved-words-header">0</strong> high-quality synonyms.</p>
+                </div>
+                <div class="action-row" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <div class="search-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="history-search" placeholder="Search clusters…">
+                    </div>
+                </div>
+            </div>
+            <div class="review-section">
+                <div class="cards-grid" id="history-cards"></div>
+                <p id="history-empty" class="empty-msg" style="display:none;">No clusters yet.</p>
+            </div>
+        </div>
+
+        <!-- ─── VIEW: Settings / Data & Models ─── -->
+        <div id="view-settings" class="view">
+            <div class="view-header">
+                <div>
+                    <h2>Data & Models</h2>
+                    <p class="view-sub">Configure your LLM generator and export your cluster library.</p>
+                </div>
+            </div>
+            
+            <div class="settings-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- AI Model Section -->
+                <div class="settings-panel" style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: .5rem; font-size: 1.1rem;">AI Generator Option</h3>
+                    <div class="form-group">
+                        <label>Select active model for generating synonyms:</label>
+                        <div class="radio-group" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <label class="radio-item" style="display: flex; align-items: flex-start; gap: 1rem; padding: 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
+                                <input type="radio" name="llm-model" value="claude" checked style="width: 20px; height: 20px; accent-color: var(--text); margin-top: 2px;">
+                                <div>
+                                    <strong style="display: block; margin-bottom: 4px;">Claude 3.5 Haiku</strong>
+                                    <span style="font-size: 0.85rem; color: var(--muted); line-height: 1.4; display: block;">Fast, reliable, and specifically prompt-tuned for Indian ecommerce standard structures.</span>
+                                </div>
+                            </label>
+                            <label class="radio-item" style="display: flex; align-items: flex-start; gap: 1rem; padding: 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer;">
+                                <input type="radio" name="llm-model" value="gemini" style="width: 20px; height: 20px; accent-color: var(--text); margin-top: 2px;">
+                                <div>
+                                    <strong style="display: block; margin-bottom: 4px;">Gemini 3 Flash</strong>
+                                    <span style="font-size: 0.85rem; color: var(--muted); line-height: 1.4; display: block;">High speed generation with extreme context capabilities. Perfect for massive production batches.</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Section -->
+                <div class="settings-panel" style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: .5rem; font-size: 1.1rem;">Export Library</h3>
+                    
+                    <div class="form-group">
+                        <label>Data Scope</label>
+                        <select id="export-scope" class="form-select" style="width: 100%; padding: 12px; margin-top: .5rem; border: 1px solid var(--border); border-radius: 6px; font-size: .95rem; font-family: inherit;">
+                            <option value="approved">Only Approved Synonyms</option>
+                            <option value="draft">Only Draft Versions</option>
+                            <option value="all">Everything (Approved + Drafts)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>File Format</label>
+                        <div class="radio-group" style="margin-top: .75rem; display: flex; gap: 2rem;">
+                            <label class="radio-item">
+                                <input type="radio" name="export-format" value="xlsx" checked>
+                                <span>Excel (.xlsx)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="export-format" value="txt">
+                                <span>Text (.txt)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label class="checkbox-item" style="display: flex; align-items: center;">
+                            <input type="checkbox" id="export-expand" style="width:18px; height:18px; accent-color: var(--text);">
+                            <span style="font-size: .95rem; margin-left: .5rem; font-weight: 500;">Expand Clusters (One distinct row per synonym)</span>
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary" id="btn-do-export" style="margin-top: 2.5rem; width: 100%; justify-content: center; height: 48px; border-radius: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Start Download
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

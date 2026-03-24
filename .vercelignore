@@ -1,0 +1,23 @@
+# Vercel Ignore File
+
+# Local Environment
+.env
+.env.local
+node_modules/
+
+# Legacy Data
+*.db
+synonyms_backup.json
+*.xlsx
+*.txt
+*.log
+
+# Debug and Test
+test_*.js
+test_*.ts
+migrate_to_mongo.js
+backup_sqlite.js
+
+# OS Files
+.DS_Store
+Thumbs.db
