@@ -9,7 +9,7 @@ const { GoogleGenAI } = require('@google/genai');
 const dotenv = require('dotenv');
 const xlsx = require('xlsx');
 
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const { Cluster, Metric, getMetrics, updateMetrics, getSynonymCounts } = require('./db');
 
@@ -28,7 +28,7 @@ const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
 // AUTH: Gemini (Vertex AI - Unified SDK)
 let genaiClient;
 try {
-    const credsPath = path.join(__dirname, '..', 'data', 'creds.json');
+    const credsPath = path.join(__dirname, 'data', 'creds.json');
     let credentials;
     if (process.env.GOOGLE_CREDS_JSON) {
         credentials = JSON.parse(process.env.GOOGLE_CREDS_JSON);
@@ -54,7 +54,7 @@ try {
 }
 
 // Load prompts
-const promptsDir = path.join(__dirname, '..', 'prompts');
+const promptsDir = path.join(__dirname, 'prompts');
 const synonymsPrompt = fs.readFileSync(path.join(promptsDir, 'synonyms.txt'), 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
 const regionalPrompt = fs.readFileSync(path.join(promptsDir, 'regional_variation.txt'), 'utf8').split('# PROCESS THIS PRODUCT TYPE')[0].trim();
 
