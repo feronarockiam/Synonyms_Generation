@@ -22,17 +22,36 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.MANAGER_PORT || 4001;
 
+// AUTH: Claude
 const anthropic = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Set credentials for Unified Google Gen AI SDK (Vertex AI mode)
-process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(__dirname, 'data', 'creds.json');
+// AUTH: Gemini (Vertex AI - Unified SDK)
+let genaiClient;
+try {
+    const credsPath = path.join(__dirname, 'data', 'creds.json');
+    let credentials;
+    if (process.env.GOOGLE_CREDS_JSON) {
+        credentials = JSON.parse(process.env.GOOGLE_CREDS_JSON);
+    } else if (fs.existsSync(credsPath)) {
+        credentials = require(credsPath);
+    }
 
-const genaiClient = new GoogleGenAI({
-    vertexai: true,
-    project: 'ozitech',
-    location: 'us-central1'
-});
+    if (credentials) {
+        // AUTH: Service Account (Vertex AI mode)
+        genaiClient = new GoogleGenAI({
+            apiKey: credentials.private_key, // Service account private key is treated as the secret
+            project: credentials.project_id,
+            location: 'us-central1'
+        });
+        console.log('Gemini initialized with Service Account (Vertex AI).');
+    } else if (process.env.GEMINI_API_KEY) {
+        // AUTH: API Key (Standalone mode)
+        genaiClient = new GoogleGenAI(process.env.GEMINI_API_KEY);
+        console.log('Gemini initialized with API Key fallback.');
+    }
+} catch (e) {
+    console.warn('Gemini init failed:', e.message);
+}
 
 // Load prompts
 const promptsDir = path.join(__dirname, 'prompts');
